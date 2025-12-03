@@ -1,0 +1,20 @@
+{
+  "VehicleSpeed": {
+    "id": 512,
+    "signals": {
+      "speed": { "start_bit": 0, "length": 16, "factor": 0.1, "offset": 0 }
+    }
+  },
+  "EngineRPM": {
+    "id": 513,
+    "signals": {
+      "rpm": { "start_bit": 0, "length": 16, "factor": 1, "offset": 0 }
+    }
+  },
+  "BrakeStatus": {
+    "id": 768,
+    "signals": {
+      "brake": { "start_bit": 0, "length": 8, "factor": 1, "offset": 0 }
+    }
+  }
+}
