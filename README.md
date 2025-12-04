@@ -46,22 +46,35 @@ This project demonstrates:
 
 # 🏗️ **System Architecture**
 
-```mermaid
-flowchart LR
-    subgraph CAN[CAN Bus Simulation (RabbitMQ Fanout Exchange)]
-    end
-
-    EngineECU[Engine ECU\nPublishes Speed + RPM]
-    BrakeECU[Brake ECU\nPublishes Brake Status]
-    ClusterECU[Cluster ECU\nDisplays Speed/RPM]
-    TelematicsECU[Telematics ECU\nMAC Validation + Alerts]
-
-    EngineECU --> CAN
-    BrakeECU --> CAN
-
-    CAN --> ClusterECU
-    CAN --> TelematicsECU
 ```
+                   ┌──────────────────────────────┐
+                   │      RabbitMQ (CAN Bus)      │
+                   │   Fanout Exchange: can_bus    │
+                   └───────────────┬──────────────┘
+                                   │
+                      Broadcasts messages to ALL ECUs
+     ┌─────────────────────────────┼────────────────────────────┐
+     │                             │                            │
+     ▼                             ▼                            ▼
+┌──────────────┐           ┌────────────────┐          ┌────────────────┐
+│  ENGINE ECU  │           │   BRAKE ECU    │          │ TELEMATICS ECU │
+│--------------│           │----------------│          │----------------│
+│ • Speed      │           │ • Brake Status │          │ • MAC Verify   │
+│ • RPM        │           │ • Encode       │          │ • Alerts       │
+│ • MAC Add    │           │ • MAC Add      │          │ • Security Log │
+└───────┬──────┘           └────────┬───────┘          └────────┬───────┘
+        │                           │                           │
+        └───────────────────────────┼───────────────────────────┘
+                                    ▼
+                         ┌────────────────────┐
+                         │    CLUSTER ECU     │
+                         │--------------------│
+                         │ • Display Speed    │
+                         │ • Display RPM      │
+                         └────────────────────┘
+```
+
+
 
 ---
 
