@@ -1,108 +1,58 @@
-🚗 Automotive CAN Bus Simulator (Python + RabbitMQ)
+🚗 Automotive CAN Bus Simulator
+Python • RabbitMQ • CAN Signals • Cybersecurity • Multi-ECU System
+<p align="center"> <img src="https://raw.githubusercontent.com/<your-username>/<repo-name>/main/assets/banner.png" width="80%" /> </p> <p align="center"> <a href="#"><img src="https://img.shields.io/badge/Python-3.9+-blue?logo=python"></a> <a href="#"><img src="https://img.shields.io/badge/RabbitMQ-Fanout_Exchange-orange?logo=rabbitmq"></a> <a href="#"><img src="https://img.shields.io/badge/Automotive-CAN_Bus-yellow?logo=car"></a> <a href="#"><img src="https://img.shields.io/badge/Status-Active-success"></a> <a href="#"><img src="https://img.shields.io/badge/License-MIT-green"></a> </p>
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
-![RabbitMQ](https://img.shields.io/badge/RabbitMQ-Message%20Broker-orange)
-![Automotive](https://img.shields.io/badge/Domain-Automotive%20Cybersecurity-red)
-![CAN Bus](https://img.shields.io/badge/Protocol-CAN%20Bus-green)
-![License](https://img.shields.io/badge/License-MIT-brightgreen.svg)
-![Status](https://img.shields.io/badge/Project-Active-success)
+🧩 Project Summary
 
-A multi-ECU automotive CAN communication simulator with signal encoding, decoding, and cybersecurity validation
+This project simulates a realistic automotive CAN Bus system using:
 
-This project simulates a realistic automotive CAN (Controller Area Network) environment using Python and RabbitMQ.
-It models how multiple ECUs communicate over a CAN Bus, including signal publishing, decoding, validation, and security checks.
+Multiple Python ECUs
 
-This project is designed for learning, portfolio showcase, and interview demonstration for roles in:
+RabbitMQ as the CAN network layer
 
-Automotive Embedded Systems
+Signal encoding/decoding
 
-Vehicle Diagnostics
+Basic cybersecurity (MAC integrity validation)
 
-Automotive Cybersecurity
+It demonstrates how real ECUs in a vehicle publish and subscribe to CAN frames.
 
-Automotive Testing / Validation
+🏎️ Included ECUs
+ECU	Function
+Engine ECU	Publishes Vehicle Speed + RPM
+Brake ECU	Publishes Brake Status
+Cluster ECU	Displays Speed + RPM
+Telematics ECU	Monitors traffic, validates MACs, detects anomalies
 
-Python Automation
+🏗️ System Architecture
+![Automotive CAN Architecture](assets/architecture.png)
 
-System / Hardware-in-loop simulation
-
-📌 Project Overview
-
-In a real vehicle, multiple ECUs (Engine, Brake, Cluster, Telematics, etc.) exchange sensor and actuator information over the CAN Bus.
-
-This project simulates that behavior:
-
-ECUs included in this simulation:
-ECU Name	Function
-Engine ECU	Publishes Vehicle Speed and Engine RPM
-Brake ECU	Publishes Brake Status (pressed / released)
-Cluster ECU	Listens to CAN and displays Speed + RPM
-Telematics ECU	Security validation + anomaly detection
-
-🧠 What this project demonstrates
-✔ CAN message creation
-
-Each ECU generates realistic signals (speed, rpm, brake status), converts them to raw CAN bytes, and assigns an ID.
-
-✔ Signal encoding/decoding
-
-Uses scaling factors and bit-lengths similar to a DBC file.
-
-✔ Message broadcasting using RabbitMQ
-
-Simulates the CAN network using:
-
-Fanout exchange → broadcasts messages to all ECUs (similar to CAN Bus broadcast nature)
-
-✔ Lightweight cybersecurity
-
-Each CAN frame includes:
-
-MAC (Message Authentication Code)
-
-Telematics ECU validates MAC integrity
-
-✔ Multi-process, scalable design
-
-Each ECU runs independently and can scale like real vehicle architectures.
-
-🖼 System Architecture Diagram (Project Banner)
-                        ┌───────────────────────────┐
-                        │        RabbitMQ           │
-                        │    (CAN Bus Simulator)    │
-                        │  Fanout Exchange: can_bus │
-                        └──────────────┬────────────┘
-                                       │
-             ┌─────────────────────────┼──────────────────────────┐
-             │                         │                          │
-             ▼                         ▼                          ▼
-
- ┌──────────────────┐       ┌──────────────────┐       ┌────────────────────┐
- │   Engine ECU     │       │    Brake ECU     │       │   Telematics ECU   │
- │------------------│       │------------------│       │--------------------│
- │ Publishes:       │       │ Publishes:       │       │ Listens to ALL ECUs│
- │  - Vehicle Speed │       │  - Brake Status  │       │ Validates MAC      │
- │  - Engine RPM    │       │                  │       │ Detects anomalies  │
- │ Encodes signals  │       │ Encodes signals  │       │ - High speed alert │
- │ Adds MAC         │       │ Adds MAC         │       │ - High RPM alert   │
- └─────────┬────────┘       └────────┬─────────┘       └───────────┬────────┘
-           │                         │                             │
-           └─────────────────────────┼─────────────────────────────┘
-                                     │
-                                     ▼
-                         ┌──────────────────────┐
-                         │     Cluster ECU      │
-                         │----------------------│
-                         │ Displays:            │
-                         │  - Speed             │
-                         │  - RPM               │
-                         │ Decodes signals      │
-                         └──────────────────────┘
-
-
+                   ┌──────────────────────────────┐
+                   │   RabbitMQ (CAN Bus Layer)   │
+                   │ Fanout Exchange → can_bus     │
+                   └───────────────┬──────────────┘
+                                   │ Broadcasts to all ECUs
+     ┌─────────────────────────────┼────────────────────────────┐
+     │                             │                            │
+     ▼                             ▼                            ▼
+┌──────────────┐           ┌────────────────┐          ┌────────────────┐
+│ ENGINE ECU   │           │ BRAKE ECU      │          │ TELEMATICS ECU │
+│--------------│           │----------------│          │----------------│
+│ • Speed      │           │ • Brake Status │          │ • MAC Verify   │
+│ • RPM        │           │ • Signal Encode│          │ • Alerts       │
+│ • MAC Add    │           │ • MAC Add      │          │                │
+└───────┬──────┘           └────────┬───────┘          └────────┬───────┘
+        │                           │                           │
+        └───────────────────────────┼───────────────────────────┘
+                                    ▼
+                         ┌────────────────────┐
+                         │   CLUSTER ECU      │
+                         │--------------------│
+                         │ • Display Speed    │
+                         │ • Display RPM      │
+                         └────────────────────┘
 
 📂 Project Structure
-automotive-can-simulator/
+automotive-can-sim/
 │
 ├── ecus/
 │   ├── engine.py
@@ -111,53 +61,82 @@ automotive-can-simulator/
 │   └── telematics.py
 │
 ├── common/
-│   └── utils.py
+│   └── utils.py          # Signal encoding/decoding + MAC
 │
 ├── config/
-│   └── db.json        # Signal definitions (similar to a DBC)
+│   └── db.json           # Signal definitions (mini-DBC)
+│
+├── assets/
+│   └── banner.png         # GitHub project banner
 │
 ├── README.md
+├── LICENSE
 └── requirements.txt
 
-🛠 Tech Stack
+🔥 Key Features
+✔️ Multi-ECU Communication
 
-Python 3
+Each ECU publishes CAN-like messages using RabbitMQ.
 
-RabbitMQ (Fanout Exchange)
+✔️ Realistic Signal Encoding
 
-CAN Signal Encoding/Decoding
+Scaling, bit lengths, raw byte encoding—similar to a DBC workflow.
 
-SHA-256 Based MAC Validation
+✔️ CAN-Bus Style Broadcast
 
-Multi-process system simulation
+RabbitMQ fanout exchange simulates:
 
-🚀 How to Run the Project
-1. Start RabbitMQ
+"One publishes → All ECUs receive"
 
-Ensure RabbitMQ is running:
+✔️ Automotive Cybersecurity
+
+Each ECU adds a SHA256 MAC, validated by the Telematics ECU.
+
+✔️ Anomaly Detection
+
+Telematics ECU performs:
+
+🚨 High Speed Alert
+
+🚨 High RPM Alert
+
+🚨 MAC Tamper Detection
+
+⚙️ Installation
+1️⃣ Install dependencies
+pip install -r requirements.txt
+
+2️⃣ Start RabbitMQ
+
+Option A — Local server:
 
 rabbitmq-server
 
 
-OR using Docker:
+Option B — Docker (recommended):
 
 docker run -d --hostname rabbit --name rabbitmq \
   -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 
 
-RabbitMQ dashboard:
+Management UI:
 👉 http://localhost:15672
 
 User: guest | Password: guest
 
-2. Install Dependencies
-pip install pika json hashlib
-
-
-(Or use pip install -r requirements.txt)
-
-3. Run ECUs (in separate terminals)
+🚀 Run ECUs (each in separate terminal)
 python ecus/engine.py
 python ecus/brake.py
 python ecus/cluster.py
 python ecus/telematics.py
+
+
+You will see:
+
+Speed / RPM updates
+
+Brake presses
+
+Cluster ECU displays live data
+
+Telematics ECU warns about abnormal signals or tampered MACs
