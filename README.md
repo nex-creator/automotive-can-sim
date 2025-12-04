@@ -1,6 +1,6 @@
 🚗 Automotive CAN Bus Simulator
 Python • RabbitMQ • CAN Signals • Cybersecurity • Multi-ECU System
-<p align="center"> <img src="https://raw.githubusercontent.com/<your-username>/<repo-name>/main/assets/banner.png" width="80%" /> </p> <p align="center"> <a href="#"><img src="https://img.shields.io/badge/Python-3.9+-blue?logo=python"></a> <a href="#"><img src="https://img.shields.io/badge/RabbitMQ-Fanout_Exchange-orange?logo=rabbitmq"></a> <a href="#"><img src="https://img.shields.io/badge/Automotive-CAN_Bus-yellow?logo=car"></a> <a href="#"><img src="https://img.shields.io/badge/Status-Active-success"></a> <a href="#"><img src="https://img.shields.io/badge/License-MIT-green"></a> </p>
+<p align="center"> <a href="#"><img src="https://img.shields.io/badge/Python-3.9+-blue?logo=python"></a> <a href="#"><img src="https://img.shields.io/badge/RabbitMQ-Fanout_Exchange-orange?logo=rabbitmq"></a> <a href="#"><img src="https://img.shields.io/badge/Automotive-CAN_Bus-yellow?logo=car"></a> <a href="#"><img src="https://img.shields.io/badge/Status-Active-success"></a> <a href="#"><img src="https://img.shields.io/badge/License-MIT-green"></a> </p>
 
 🧩 Project Summary
 
@@ -24,33 +24,10 @@ Cluster ECU	Displays Speed + RPM
 Telematics ECU	Monitors traffic, validates MACs, detects anomalies
 
 🏗️ System Architecture
+
 ![Automotive CAN Architecture](assets/architecture.png)
 
-                   ┌──────────────────────────────┐
-                   │   RabbitMQ (CAN Bus Layer)   │
-                   │ Fanout Exchange → can_bus     │
-                   └───────────────┬──────────────┘
-                                   │ Broadcasts to all ECUs
-     ┌─────────────────────────────┼────────────────────────────┐
-     │                             │                            │
-     ▼                             ▼                            ▼
-┌──────────────┐           ┌────────────────┐          ┌────────────────┐
-│ ENGINE ECU   │           │ BRAKE ECU      │          │ TELEMATICS ECU │
-│--------------│           │----------------│          │----------------│
-│ • Speed      │           │ • Brake Status │          │ • MAC Verify   │
-│ • RPM        │           │ • Signal Encode│          │ • Alerts       │
-│ • MAC Add    │           │ • MAC Add      │          │                │
-└───────┬──────┘           └────────┬───────┘          └────────┬───────┘
-        │                           │                           │
-        └───────────────────────────┼───────────────────────────┘
-                                    ▼
-                         ┌────────────────────┐
-                         │   CLUSTER ECU      │
-                         │--------------------│
-                         │ • Display Speed    │
-                         │ • Display RPM      │
-                         └────────────────────┘
-
+  
 📂 Project Structure
 automotive-can-sim/
 │
@@ -67,7 +44,7 @@ automotive-can-sim/
 │   └── db.json           # Signal definitions (mini-DBC)
 │
 ├── assets/
-│   └── banner.png         # GitHub project banner
+│   └── architecture.png  # GitHub project banner
 │
 ├── README.md
 ├── LICENSE
@@ -131,7 +108,7 @@ python ecus/cluster.py
 python ecus/telematics.py
 
 
-You will see:
+Output:
 
 Speed / RPM updates
 
